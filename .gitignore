@@ -1,0 +1,24 @@
+node_modules
+.next
+.env
+.npmrc
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.db.backup
+.DS_Store
+
+# Docker persistent data
+/data/
+
+# Large files
+go-home-installer/
+backups/
+mkcert.exe
+*.tar
+*.bak
+data.json
+tsconfig.tsbuildinfo
+certs/
+temp_*

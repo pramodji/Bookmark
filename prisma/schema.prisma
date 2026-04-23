@@ -1,0 +1,222 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Bookmark {
+  id          String  @id
+  userId      String  @default("admin")
+  title       String
+  url         String
+  description String? @default("")
+  tags        String? @default("")
+  icon        String? @default("")
+  notes       String? @default("")
+  group       String  @default("General")
+  subgroup    String? @default("")
+  position    Int     @default(0)
+  favorite    Boolean @default(false)
+  visits      Int     @default(0)
+  createdAt   String
+  updatedAt   String
+}
+
+model Subgroup {
+  id       String  @id
+  userId   String  @default("admin")
+  name     String
+  group    String
+  icon     String? @default("")
+  favorite Boolean @default(false)
+  position Int     @default(0)
+  createdAt String
+  updatedAt String
+  
+  @@unique([name, group, userId])
+}
+
+model Group {
+  id       Int    @id @default(autoincrement())
+  userId   String @default("admin")
+  name     String
+  position Int    @default(0)
+
+  @@unique([name, userId])
+}
+
+model Note {
+  id        String  @id
+  userId    String  @default("admin")
+  title     String
+  content   String
+  tags      String? @default("")
+  pinned    Boolean @default(false)
+  date      String? @default("")
+  category  String? @default("default")
+  createdAt String
+  updatedAt String
+}
+
+model Task {
+  id          String  @id
+  userId      String  @default("admin")
+  title       String
+  description String? @default("")
+  completed   Boolean @default(false)
+  priority    String  @default("medium")
+  dueDate     String?
+  tags        String? @default("")
+  subtasks    String  @default("[]")
+  date        String? @default("")
+  repeat      String? @default("")
+  order       Int     @default(0)
+  createdAt   String
+  updatedAt   String
+}
+
+model StickyNote {
+  id        String  @id
+  userId    String  @default("admin")
+  title     String  @default("")
+  content   String
+  color     String  @default("yellow")
+  position  Int     @default(0)
+  floating  Boolean @default(false)
+  collapsed Boolean @default(false)
+  x         Float   @default(100)
+  y         Float   @default(100)
+  width     Float   @default(256)
+  height    Float   @default(200)
+  opacity   Float   @default(1)
+  blurred   Boolean @default(false)
+  createdAt String
+  updatedAt String
+}
+
+model NoteTemplate {
+  id        String  @id
+  userId    String  @default("admin")
+  title     String
+  content   String
+  tags      String? @default("")
+  builtIn   Boolean @default(false)
+  createdAt String
+}
+
+model Widget {
+  id        String  @id
+  userId    String  @default("admin")
+  title     String  @default("Widget")
+  type      String  @default("clock")
+  content   String? @default("")
+  floating  Boolean @default(false)
+  collapsed Boolean @default(false)
+  column    Int     @default(0)
+  row       Int     @default(0)
+  x         Float   @default(200)
+  y         Float   @default(200)
+  width     Float   @default(280)
+  height    Float   @default(200)
+  showAll   Boolean @default(false)
+  hideTitle Boolean @default(false)
+  noBorder  Boolean @default(false)
+  config    String  @default("{}")
+  opacity   Float   @default(1)
+  createdAt String
+  updatedAt String
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model UserSetting {
+  userId String
+  key    String
+  value  String
+
+  @@id([userId, key])
+}
+
+model User {
+  id        String  @id @default(cuid())
+  username  String  @unique
+  password  String
+  firstName String  @default("")
+  lastName  String  @default("")
+  role      String  @default("user")
+  approved  Boolean @default(false)
+  createdAt String
+}
+
+model Icon {
+  id     Int    @id @default(autoincrement())
+  userId String @default("admin")
+  data   String
+
+  @@unique([userId, data])
+}
+
+model Reminder {
+  id          String  @id
+  userId      String  @default("admin")
+  title       String
+  description String? @default("")
+  remindAt    String
+  repeat      String? @default("")
+  dismissed   Boolean @default(false)
+  linkedType  String? @default("")
+  linkedId    String? @default("")
+  createdAt   String
+  updatedAt   String
+}
+
+model Session {
+  id        String @id @default(cuid())
+  username  String
+  ip        String @default("")
+  userAgent String @default("")
+  loginAt   String
+  lastSeen  String
+}
+
+model Notebook {
+  id        String @id
+  userId    String @default("admin")
+  name      String
+  color     String @default("#3b82f6")
+  position  Int    @default(0)
+  createdAt String
+  updatedAt String
+}
+
+model NotebookSection {
+  id         String @id
+  userId     String @default("admin")
+  notebookId String
+  name       String
+  position   Int    @default(0)
+  createdAt  String
+  updatedAt  String
+}
+
+model NotebookPage {
+  id         String  @id
+  userId     String  @default("admin")
+  sectionId  String
+  notebookId String
+  parentId   String? @default("")
+  title      String  @default("Untitled Page")
+  content    String  @default("")
+  icon       String  @default("")
+  position   Int     @default(0)
+  depth      Int     @default(0)
+  createdAt  String
+  updatedAt  String
+}
